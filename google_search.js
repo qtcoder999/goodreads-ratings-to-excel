@@ -29,82 +29,70 @@ const openTabs = async count => {
   return null;
 };
 const getTitles = async searchTerm => {
-  try {
-    await driver.findElement(By.css("#bookTitle")).then(async element => {
+  await driver.findElement(By.css("#bookTitle")).then(async element => {
+    await element.getText().then(text => {
+      metaData.titles.push(text);
+      driver.findElement(By.css("body")).sendKeys(Key.ESCAPE);
+    });
+  });
+};
+
+const getAuthors = async () => {
+  await driver
+    .findElement(By.css('span[itemprop="author"]'))
+    .then(async element => {
       await element.getText().then(text => {
-        metaData.titles.push(text);
-        driver.findElement(By.css("body")).sendKeys(Key.ESCAPE);
+        metaData.authors.push(text);
       });
     });
+};
+
+const getRatings = async () => {
+  await driver
+    .findElement(By.css('span[itemprop="ratingValue"]'))
+    .then(async element => {
+      await element.getText().then(text => {
+        metaData.ratings.push(text.trim());
+      });
+    });
+};
+
+const getNumberOfRatings = async () => {
+  await driver
+    .findElement(By.css("#bookMeta > a:nth-child(7)"))
+    .then(async element => {
+      await element.getText().then(text => {
+        const stringAfterReplacement = text.replace("ratings", "").trim();
+        metaData.numberOfRatings.push(stringAfterReplacement);
+      });
+    });
+};
+
+const searchTheTerm = async searchTerm => {
+  try {
+    // console.log(searchTerm);
+    const searchLocator = By.name("q");
+    const iAmFeelingLuckyLocator = By.css(
+      '.FPdoLc.VlcLAe input[aria-label="I\'m Feeling Lucky"]'
+    );
+    return driver
+      .get(url)
+      .then(
+        await driver
+          .findElement(async () =>
+            driver.wait(until.elementLocated(searchLocator))
+          )
+          .sendKeys(`${searchTerm} ${suffix}`)
+      )
+      .then(await driver.findElement(iAmFeelingLuckyLocator).click())
+      .then(await getTitles(searchTerm))
+      .then(await getAuthors())
+      .then(await getRatings())
+      .then(await getNumberOfRatings());
   } catch {
     console.log("@@@@Failure", searchTerm);
     return 1;
   }
-};
-
-const getAuthors = async () => {
-  try {
-    await driver
-      .findElement(By.css('span[itemprop="author"]'))
-      .then(async element => {
-        await element.getText().then(text => {
-          metaData.authors.push(text);
-        });
-      });
-  } catch {
-    return 1;
-  }
-};
-
-const getRatings = async () => {
-  try {
-    await driver
-      .findElement(By.css('span[itemprop="ratingValue"]'))
-      .then(async element => {
-        await element.getText().then(text => {
-          metaData.ratings.push(text.trim());
-        });
-      });
-  } catch {
-    return 1;
-  }
-};
-
-const getNumberOfRatings = async () => {
-  try {
-    await driver
-      .findElement(By.css("#bookMeta > a:nth-child(7)"))
-      .then(async element => {
-        await element.getText().then(text => {
-          const stringAfterReplacement = text.replace("ratings", "").trim();
-          metaData.numberOfRatings.push(stringAfterReplacement);
-        });
-      });
-  } catch {
-    return 1;
-  }
-};
-
-const searchTheTerm = async searchTerm => {
-  // console.log(searchTerm);
-  const searchLocator = By.name("q");
-  const iAmFeelingLuckyLocator = By.css(
-    '.FPdoLc.VlcLAe input[aria-label="I\'m Feeling Lucky"]'
-  );
-  return driver
-    .get(url)
-    .then(
-      await driver
-        .findElement(async () =>
-          driver.wait(until.elementLocated(searchLocator))
-        )
-        .sendKeys(`${searchTerm} ${suffix}`)
-    )
-    .then(await driver.findElement(iAmFeelingLuckyLocator).click())
-    .then(await getTitles(searchTerm))
-    .then(await getAuthors())
-    .then(await getRatings())
-    .then(await getNumberOfRatings());
   // .then(console.log(metaData));
 };
 
