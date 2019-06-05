@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const { Builder, By, until, Key } = require("selenium-webdriver");
 const excel = require("./excel");
 require("chromedriver");
@@ -28,7 +29,7 @@ const openTabs = async count => {
   if (count > 1) return openTabs(newCount);
   return null;
 };
-const getTitles = async searchTerm => {
+const getTitles = async () => {
   await driver.findElement(By.css("#bookTitle")).then(async element => {
     await element.getText().then(text => {
       metaData.titles.push(text);
@@ -84,13 +85,24 @@ const searchTheTerm = async searchTerm => {
           )
           .sendKeys(`${searchTerm} ${suffix}`)
       )
-      .then(await driver.findElement(iAmFeelingLuckyLocator).click())
+      .then(
+        await driver
+          .findElement(async () =>
+            driver.wait(until.elementLocated(iAmFeelingLuckyLocator))
+          )
+          .then(
+            await driver.executeScript(
+              'document.querySelector("#tsf > div:nth-child(2) > div > div.FPdoLc.VlcLAe > center > input[type=submit]:nth-child(2)").click()'
+            )
+          )
+      )
       .then(await getTitles(searchTerm))
       .then(await getAuthors())
       .then(await getRatings())
       .then(await getNumberOfRatings());
-  } catch {
+  } catch (err) {
     console.log("@@@@Failure", searchTerm);
+    console.log("@@@@Reason", err);
     return 1;
   }
   // .then(console.log(metaData));
