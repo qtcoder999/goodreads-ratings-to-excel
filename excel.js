@@ -10,9 +10,9 @@ var xlsx = require("node-xlsx");
 //   }
 // }
 const getDataFromExcel = async () => {
-  var obj = xlsx.parse(__dirname + "/myFile.xlsx"); // parses a file
+  var obj = xlsx.parse(__dirname + "/input.xlsx"); // parses a file
 
-  var obj = xlsx.parse(fs.readFileSync(__dirname + "/myFile.xlsx")); // parses a buffer
+  var obj = xlsx.parse(fs.readFileSync(__dirname + "/input.xlsx")); // parses a buffer
 
   return obj;
   // walk(obj);
