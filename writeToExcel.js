@@ -60,7 +60,7 @@ async function writeToExcel(metaData) {
   ws.column(3).setWidth(20);
 
   rowCounter += metaData.titles.length;
-  wb.write("data.xlsx");
+  wb.write("output.xlsx");
 }
 
 automation.start().then(() => {
@@ -77,4 +77,4 @@ automation.start().then(() => {
 // };
 
 // const xlsx = json2xlsx(json);
-// fs.writeFileSync("data.xlsx", xlsx, "binary");
+// fs.writeFileSync("output.xlsx", xlsx, "binary");

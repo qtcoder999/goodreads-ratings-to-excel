@@ -57,4 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
-myFile.xlsx
+input.xlsx
+output.xlsx
