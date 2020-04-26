@@ -46,7 +46,7 @@
     ]
   },
   "dependencies": {
-    "chromedriver": "^2.46.0",
+    "chromedriver": "^81.0.0",
     "excel4node": "^1.7.2",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "xlsx": "^0.14.3"

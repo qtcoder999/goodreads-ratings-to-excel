@@ -72,10 +72,10 @@ const getNumberOfRatings = async () => {
 const searchTheTerm = async searchTerm => {
   try {
     // console.log(searchTerm);
+    const iAmFeelingLuckyLocator =
+      "#tsf > div:nth-child(2) > div.A8SBwf > div.FPdoLc.tfB0Bf > center > input.RNmpXc";
     const searchLocator = By.name("q");
-    const iAmFeelingLuckyLocator = By.css(
-      '.FPdoLc.VlcLAe input[aria-label="I\'m Feeling Lucky"]'
-    );
+    const locaterHandle = By.css(iAmFeelingLuckyLocator);
     return driver
       .get(url)
       .then(
@@ -88,13 +88,15 @@ const searchTheTerm = async searchTerm => {
       .then(
         await driver
           .findElement(async () =>
-            driver.wait(until.elementLocated(iAmFeelingLuckyLocator))
+            driver.wait(until.elementLocated(locaterHandle))
           )
-          .then(
-            await driver.executeScript(
-              'document.querySelector("#tsf > div:nth-child(2) > div > div.FPdoLc.VlcLAe > center > input[type=submit]:nth-child(2)").click()'
-            )
-          )
+          .then(async function() {
+            const script =
+              'document.querySelector("' +
+              iAmFeelingLuckyLocator +
+              '").click()';
+            await driver.executeScript(script);
+          })
       )
       .then(await getTitles(searchTerm))
       .then(await getAuthors())
